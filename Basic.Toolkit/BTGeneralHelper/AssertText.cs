@@ -17,7 +17,7 @@ namespace System
         /// <returns></returns>
         public static string RemoveCharacter(this string value, params string[] retire)
         {
-            if (retire == null || retire.Length == 0)
+            if (value == null || retire == null || retire.Length == 0)
                 return value;
 
             for (int i = 0; i < retire.Length; i++)
@@ -30,24 +30,21 @@ namespace System
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static bool ContainsLetter(this string value) => value.Any(char.IsLetter);
+        public static bool ContainsLetter(this string value) => !string.IsNullOrEmpty(value) && value.Any(char.IsLetter);
 
         /// <summary>
         /// Verifica se contém números na string informada.
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static bool ContainsNumber(this string value) => value.Any(char.IsNumber);
+        public static bool ContainsNumber(this string value) => !string.IsNullOrEmpty(value) && value.Any(char.IsNumber);
 
         /// <summary>
         /// Verifica se contém somente números na string informada.
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static bool ContainsOnlyNumber(this string value)
-        {
-            return value.Where(c => char.IsNumber(c)).Count() == value.Length;
-        }
+        public static bool ContainsOnlyNumber(this string value) => !string.IsNullOrEmpty(value) && value.Count(char.IsNumber) == value.Length;
 
         /// <summary>
         /// Format '99.999-999'.
@@ -56,8 +53,9 @@ namespace System
         /// <returns></returns>
         public static bool IsCEP(this string value)
         {
+            if (string.IsNullOrEmpty(value))
+                return false;
             return new Regex(@"^([0-9]{2})\.([0-9]{3})\-([0-9]{3})$").IsMatch(value);
-            //return new Regex(@"^\d{5}\-?\d{3}$").IsMatch(value);
         }
 
         /// <summary>
@@ -67,6 +65,8 @@ namespace System
         /// <returns></returns>
         public static bool IsEmail(this string email)
         {
+            if (string.IsNullOrEmpty(email))
+                return false;
             return new Regex(@"^[A-Za-z0-9](([_\.\-]?[a-zA-Z0-9]+)*)@([A-Za-z0-9]+)(([\.\-]?[a-zA-Z0-9]+)*)\.([A-Za-z]{2,})$").IsMatch(email);
         }
 
@@ -77,6 +77,8 @@ namespace System
         /// <returns></returns>
         public static bool IsUrl(this string url)
         {
+            if (string.IsNullOrEmpty(url))
+                return false;
             return new Regex(@"^((http)|(https)|(ftp)):\/\/([\- \w]+\.)+\w{2,3}(\/ [%\-\w]+(\.\w{2,})?)*$").IsMatch(url);
         }
 
@@ -87,9 +89,13 @@ namespace System
         /// <returns></returns>
         public static bool IsFone(this string fone)
         {
+            if (string.IsNullOrEmpty(fone))
+                return false;
             return
                 new Regex(@"^(\([0-9]{2}\))\s[0-9]{4}-[0-9]{4}$").IsMatch(fone) ||
-                new Regex(@"^(\([0-9]{2}\))\s[0-9]{5}-[0-9]{4}$").IsMatch(fone);
+                new Regex(@"^[0-9]{4}-[0-9]{4}$").IsMatch(fone) ||
+                new Regex(@"^(\([0-9]{2}\))\s[0-9]{5}-[0-9]{4}$").IsMatch(fone) ||
+                new Regex(@"^[0-9]{5}-[0-9]{4}$").IsMatch(fone);
         }
 
         /// <summary>
@@ -183,6 +189,8 @@ namespace System
         /// <returns></returns>
         public static bool IsCnpj(this string cnpj)
         {
+            if (string.IsNullOrEmpty(cnpj))
+                return false;
 
             int[] multiplier1 = new int[12] { 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 };
             int[] multiplier2 = new int[13] { 6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 };
@@ -242,6 +250,8 @@ namespace System
         /// <returns></returns>
         public static bool IsHour(this string hour)
         {
+            if (string.IsNullOrEmpty(hour))
+                return false;
             return new Regex(@"^([0-9]{2}):([0-9]{2})$").IsMatch(hour);
         }
 
